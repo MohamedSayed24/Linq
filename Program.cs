@@ -1,201 +1,102 @@
-﻿using System.Collections;
-using static Linq.ListGenerator;
-namespace Linq
+﻿using System.Collections.Generic;
+using System.Runtime.Intrinsics.X86;
+using System.Text.RegularExpressions;
+using static AssignmentLinq03.ListGenerator;
+using static System.Net.Mime.MediaTypeNames;
+namespace AssignmentLinq03
 {
     internal class Program
     {
-        //public static void Print (object X)
-        //{
-        //    Console.WriteLine (X);
-        //}
-        //public static void Print(dynamic X)
-        //{
-        //    Console.WriteLine(X);
-        //}
         static void Main(string[] args)
         {
-            #region Var vs Dynamic
-            // Var Implicitly typed variable
-            // Type will be determined at compilation time based on the assigned value (strong typing)
-            // Cannot change the data type once the type is declaration at the compilation time
-            // Variable must be intialized at the time of it's decleration
-            // static type best at performance than dynamic type
+            string filePath = "dictionary_english.txt";
+            string[] dictionary = File.ReadAllLines(filePath);
 
-            //var x = 10;
-
-            // Dynamic
-            // Dynammic Dynamically typed variable
-            // Type will be determined at run time based on the assigned value 
-            // Can change the data type once the type
-            // Variable not have to be intialized at the time of it's decleration
-
-            //dynamic x ;
-
-
-            #endregion
-
-            #region Anonymous Type
-            //var employee01 = new { Name = "Ahmed", Id = 10 };
-            //var employee02 = new { Id = 10, Name = "mohamed" };
-            //Console.WriteLine(employee01.GetType().Name);
-            //Console.WriteLine(employee02.GetType().Name);
-
-            //var UpdatedEmployee01 = employee01 with { Id = 50 };
-            //Console.WriteLine(UpdatedEmployee01.GetType().Name);
-            //Console.WriteLine(employee01.GetType().Name);
-            //Console.WriteLine(employee02.GetType().Name);
-            #endregion
-
-            #region Extension Method
-            //List<int> numbers = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            //numbers.Shuffle();
-            //Console.WriteLine(string.Join(", ",numbers));
-
-            //List<string> names = ["Mohamed", "Ahmed", "Aya", "ossama"];
-            //names.Shuffle();
-            //Console.WriteLine(string.Join(", ",names));
-            #endregion
-
-            #region Linq
-            #region What is Linq ?
-            // Language integrated query 
-            // +40 Extension Methods inside bulit-in interface ( IEnumerable <> )
-            // Linq Operators Exists inside Enumerable class
-            // Categorized into 13 category
-            // Use Linq operators against any Data (stored in Sequence) , Regardless DataBase Provider (Sql , Mysql , postgres,oracle)
-            // Sequence => Object from class implementing (IEnumerable<>) (collections => List , Array , Dictionary ..)
-            // 1.Local Sequence => L2O , L2XML
-            // 2.Remote Sequence => L2EF  
-
-            //List<int> numbers = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            //List<int> OddNumbers = numbers.Where(x => x % 2 == 1).ToList();
-            //Console.WriteLine(string.Join(", " , OddNumbers));
-            #endregion
-
-
-            #region Linq Syntax
-            // 1-Fluent Syntax 
-            // 1.1 Call Linq operator as a static method throw Enumerable class
-            // List<int> oddNumbers = Enumerable.Where(numbers, x => x % 2 == 1).ToList();
-            // 1.2 Call Linq operator as a Extension Method 
-            // List<int> OddNumbers = numbers.Where(X => X % 2 == 1 ).ToList(); => Recommended
-
-            // 2-Query Syntax (Query Expression)
-            // Like SQL Query style
-            // Starting with Keyword "from"
-            // Range Variable Represent each element in input sequence
-            // Ending With Select or Groub BY Keyword
-            //var OddNumbers = from x in numbers
-            //                 where x % 2 == 1
-            //                 select x;
-            //Console.WriteLine(String.Join(", ", OddNumbers));
-            #endregion
-
-            #region Execution Ways
-            #region Deffered Execution
-            // Deffered Excution => Works on (Latest Version of Data)
-            //List<int> numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-            //var OddNumbers = numbers.Where(X => X % 2 == 1);
-
-            //numbers.AddRange([11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
-
-            //Console.WriteLine(String.Join(", ", OddNumbers)); 
-            #endregion
-
-            #region Immediate Execution
-            // Immediate Execution (Element Operators , Casting operators , Aggregate Operators )
-            //List<int> numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-            //var OddNumbers = numbers.Where(X => X % 2 == 1).ToList();
-
-            //numbers.AddRange([11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
-
-            //Console.WriteLine(String.Join(", ", OddNumbers));
-            #endregion
-            #endregion
-            #endregion
-
-            #region Filteration (Restriction Oberators) => Where , OfType
-            //Fluent Syntax
-            //var products = ProductList.Where((product, index) => product.UnitsInStock == 0 && index < 10);
-            //Console.WriteLine("Products are out of stock :");
-            //foreach (var unit in products)
+            #region LINQ - Partitioning Operators
+            #region 1. Get the first 3 orders from customers in Washington
+            //var result = CustomerList.Where(customer => customer.Region=="WA")
+            //                         .SelectMany(o => o.Orders).Take(3);
+            //foreach (var customer in result)
             //{
-            //    Console.WriteLine(unit);
+            //    Console.WriteLine(customer);
             //}
-            //indexed Where Valid only in fluent Syntax
+            #endregion
 
-            //Query Syntax
-            //var OutOfStockProducts = from product in ProductList
-            //                         where product.UnitsInStock == 0 && product.Category == "Meat/Poultry"
-            //                         select product;
-            //foreach (var item in OutOfStockProducts)
+            #region 2. Get all but the first 2 orders from customers in Washington.
+            //var result = CustomerList.Where(customer => customer.Region == "WA")
+            //                         .SelectMany(o => o.Orders).Skip(2);
+            //foreach (var customer in result)
             //{
-            //    Console.WriteLine(item);
+            //    Console.WriteLine(customer);
             //}
 
-            // TypeOf
-            //ArrayList list = ["Ahmed", 1, true, "Ali"];
-            //var StringList = list.OfType<string>();
-            //Console.WriteLine(string.Join(", ", StringList));
             #endregion
 
-            #region Transformation (Projection) Operators - Select , SelectMany
-            #region Select
-            //var ProductNames = ProductList.Select(product => product.ProductName);
-
-            //var ProductsNames = from product in ProductList
-            //                    select product.ProductName;
-            //var products = ProductList.Where(product => product.UnitsInStock == 0)
-            //                                .Select((product, index) => $"{index + 1} : {product.ProductName}");
-            //                                
-            //var products = ProductList.Where(product => product.UnitsInStock != 0)
-            //                           .Select(product => new
-            //                           {
-            //                               Id = product.ProductID,
-            //                               Name = product.ProductName,
-            //                               OldPrice = product.UnitPrice,
-            //                               NewPrice = product.UnitPrice - (product.UnitPrice * 0.1m)
-            //                           });
-
-            //var products = from product in ProductList
-            //               where product.UnitPrice > 1
-            //               select new
-            //               {
-            //                   Id = product.ProductID,
-            //                   Name = product.ProductName,
-            //                   OldPrice = product.UnitPrice,
-            //                   NewPrice = product.UnitPrice - (product.UnitPrice * 0.1m)
-            //               };
-
-            //var products = from product in ProductList
-            //               select new { Id = product.ProductID, Name = product.ProductName };
-            //foreach (var Product in products)
-            //    Console.WriteLine(Product); 
+            #region 3. Return elements starting from the beginning of the array until a number is hit that is less than its position in the array.
+            //int[] numbers = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            //var result = numbers.TakeWhile((number, index) => number > index);
+            //foreach (var number in result)
+            //{
+            //    Console.WriteLine(number);
+            //}
             #endregion
 
-            #region SelectMany
-            // var orders = CustomerList.SelectMany(customer => customer.Orders , (customer,order)=> new {customer,order} );
-            //var orders = from customer in CustomerList
-            //             from order in customer.Orders
-            //             select new { customer, order };
-            //foreach (var order in orders)
-            //    Console.WriteLine(order);
+            #region 4.Get the elements of the array starting from the first element divisible by 3.
+            //int[] numbers = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            //var result = numbers.SkipWhile(number => number % 3 != 0);
+            //Console.WriteLine(string.Join(", ", result));
+
+            #endregion
+
+            #region 5. Get the elements of the array starting from the first element less than its position.
+            //int[] numbers = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            //var result = numbers.SkipWhile((number, index) => number > index);
+            //foreach (var number in result)
+            //{
+            //    Console.WriteLine(number);
+            //}
+
             #endregion
             #endregion
 
-            #region Ordering Operators
-            //var result = ProductList.OrderByDescending(product => product.ProductName)
-            //                        .OrderByDescending(product => product.UnitsInStock)
-            //                        .Select(product => new {Name = product.ProductName , UnitsAvailable=product.UnitsInStock})    ;
+            #region LINQ – Grouping Operators
+            #region Use group by to partition a list of numbers by their remainder when divided by 5
+            //List<int> numbers = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+            //var result = numbers.GroupBy(n => n % 5);
+            //foreach (var group in result)
+            //{
+            //    Console.WriteLine("\n");
+            //    Console.WriteLine($"Numbers with remainder {group.Key} when divided by 5: {string.Join(", ", group)}");
+            //}
 
-           //var result = from product in ProductList
-           //          orderby product.ProductName descending, product.UnitsInStock descending
-           //             select new { Name = product.ProductName, UnitsAvailable = product.UnitsInStock };
+            #endregion
 
-           // foreach (var Product in result)
-           //     Console.WriteLine(Product);
+            #region Uses group by to partition a list of words by their first letter. Use dictionary_english.txt for Input
+            //var result = dictionary.GroupBy(word => word[0]);
+            //foreach (var group in result)
+            //{
+            //    Console.WriteLine(group.Key);
+            //    //foreach (var word in group)
+            //    //{
+            //    //    Console.WriteLine(word);
+            //    //}
+            //    Console.WriteLine("====================================================");
+            //}
+            #endregion
+
+            #region Use Group By with a custom comparer that matches words that are consists of the same Characters Together
+            //String[] Arr = { "from", "salt", "earn", " last", "near", "form" };
+            //var result = Arr.GroupBy(word => String.Concat(word.OrderBy(c => c)));
+            //foreach (var group in result)
+            //{
+                
+            //    foreach (var word in group)
+            //    {
+            //        Console.WriteLine(word);
+            //    }
+            //    Console.WriteLine("====================================================");
+            //}
+            #endregion
             #endregion
         }
     }
