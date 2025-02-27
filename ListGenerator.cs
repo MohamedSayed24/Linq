@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace Linq
+namespace AssignmentLinq02
 {
     class Product 
     {

@@ -1,202 +1,232 @@
-﻿using System.Collections;
-using static Linq.ListGenerator;
-namespace Linq
+﻿using System.Collections.Generic;
+using static AssignmentLinq02.ListGenerator;
+using static System.Net.Mime.MediaTypeNames;
+namespace AssignmentLinq02
 {
     internal class Program
     {
-        //public static void Print (object X)
-        //{
-        //    Console.WriteLine (X);
-        //}
-        //public static void Print(dynamic X)
-        //{
-        //    Console.WriteLine(X);
-        //}
         static void Main(string[] args)
         {
-            #region Var vs Dynamic
-            // Var Implicitly typed variable
-            // Type will be determined at compilation time based on the assigned value (strong typing)
-            // Cannot change the data type once the type is declaration at the compilation time
-            // Variable must be intialized at the time of it's decleration
-            // static type best at performance than dynamic type
+            string filePath = "dictionary_english.txt";
+            string[] dictionary = File.ReadAllLines(filePath);
+            #region LINQ - Element Operators
+            #region 1-Get first Product out of Stock
+            //var firstProductOutOfStock = ProductList.FirstOrDefault(product => product.UnitsInStock == 0);
+            //Console.WriteLine(firstProductOutOfStock);
+            #endregion
 
-            //var x = 10;
+            #region 2- Return the first product whose Price > 1000, unless there is no match, in which case null is returned.
+            //var result = ProductList.FirstOrDefault(product => product.UnitPrice > 1000);
+            //Console.WriteLine(result);
+            #endregion
 
-            // Dynamic
-            // Dynammic Dynamically typed variable
-            // Type will be determined at run time based on the assigned value 
-            // Can change the data type once the type
-            // Variable not have to be intialized at the time of it's decleration
+            #region 3- Retrieve the second number greater than 5
+            //int[] numbers = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            //var result = numbers.Where(num => num > 5).OrderBy(num => num).ElementAt(1);
+            //Console.WriteLine(result);
 
-            //dynamic x ;
+            #endregion
 
 
             #endregion
 
-            #region Anonymous Type
-            //var employee01 = new { Name = "Ahmed", Id = 10 };
-            //var employee02 = new { Id = 10, Name = "mohamed" };
-            //Console.WriteLine(employee01.GetType().Name);
-            //Console.WriteLine(employee02.GetType().Name);
-
-            //var UpdatedEmployee01 = employee01 with { Id = 50 };
-            //Console.WriteLine(UpdatedEmployee01.GetType().Name);
-            //Console.WriteLine(employee01.GetType().Name);
-            //Console.WriteLine(employee02.GetType().Name);
+            #region LINQ - Aggregate Operators
+            #region 1- Uses Count to get the number of odd numbers in the array
+            //int[] numbers = {5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            //var result = numbers.Count(num => num % 2 ==1);
+            //Console.WriteLine(result);
             #endregion
 
-            #region Extension Method
-            //List<int> numbers = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            //numbers.Shuffle();
-            //Console.WriteLine(string.Join(", ",numbers));
+            #region 2- Return a list of customers and how many orders each has.
 
-            //List<string> names = ["Mohamed", "Ahmed", "Aya", "ossama"];
-            //names.Shuffle();
-            //Console.WriteLine(string.Join(", ",names));
-            #endregion
-
-            #region Linq
-            #region What is Linq ?
-            // Language integrated query 
-            // +40 Extension Methods inside bulit-in interface ( IEnumerable <> )
-            // Linq Operators Exists inside Enumerable class
-            // Categorized into 13 category
-            // Use Linq operators against any Data (stored in Sequence) , Regardless DataBase Provider (Sql , Mysql , postgres,oracle)
-            // Sequence => Object from class implementing (IEnumerable<>) (collections => List , Array , Dictionary ..)
-            // 1.Local Sequence => L2O , L2XML
-            // 2.Remote Sequence => L2EF  
-
-            //List<int> numbers = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            //List<int> OddNumbers = numbers.Where(x => x % 2 == 1).ToList();
-            //Console.WriteLine(string.Join(", " , OddNumbers));
-            #endregion
+            //var customerOrders = CustomerList.Select(customer => new { customer.CustomerName, OrderCount = customer.Orders.Count() });
 
 
-            #region Linq Syntax
-            // 1-Fluent Syntax 
-            // 1.1 Call Linq operator as a static method throw Enumerable class
-            // List<int> oddNumbers = Enumerable.Where(numbers, x => x % 2 == 1).ToList();
-            // 1.2 Call Linq operator as a Extension Method 
-            // List<int> OddNumbers = numbers.Where(X => X % 2 == 1 ).ToList(); => Recommended
-
-            // 2-Query Syntax (Query Expression)
-            // Like SQL Query style
-            // Starting with Keyword "from"
-            // Range Variable Represent each element in input sequence
-            // Ending With Select or Groub BY Keyword
-            //var OddNumbers = from x in numbers
-            //                 where x % 2 == 1
-            //                 select x;
-            //Console.WriteLine(String.Join(", ", OddNumbers));
-            #endregion
-
-            #region Execution Ways
-            #region Deffered Execution
-            // Deffered Excution => Works on (Latest Version of Data)
-            //List<int> numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-            //var OddNumbers = numbers.Where(X => X % 2 == 1);
-
-            //numbers.AddRange([11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
-
-            //Console.WriteLine(String.Join(", ", OddNumbers)); 
-            #endregion
-
-            #region Immediate Execution
-            // Immediate Execution (Element Operators , Casting operators , Aggregate Operators )
-            //List<int> numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-            //var OddNumbers = numbers.Where(X => X % 2 == 1).ToList();
-
-            //numbers.AddRange([11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
-
-            //Console.WriteLine(String.Join(", ", OddNumbers));
-            #endregion
-            #endregion
-            #endregion
-
-            #region Filteration (Restriction Oberators) => Where , OfType
-            //Fluent Syntax
-            //var products = ProductList.Where((product, index) => product.UnitsInStock == 0 && index < 10);
-            //Console.WriteLine("Products are out of stock :");
-            //foreach (var unit in products)
+            //foreach (var customer in customerOrders)
             //{
-            //    Console.WriteLine(unit);
+            //    Console.WriteLine(customer);
             //}
-            //indexed Where Valid only in fluent Syntax
+            #endregion
 
-            //Query Syntax
-            //var OutOfStockProducts = from product in ProductList
-            //                         where product.UnitsInStock == 0 && product.Category == "Meat/Poultry"
-            //                         select product;
-            //foreach (var item in OutOfStockProducts)
+            #region 3-Return a list of categories and how many products each has
+            //var result = ProductList.GroupBy(product => product.Category)
+            //                        .Select(product => new { Category = product.Key, ProductCount = product.Count() });
+            //foreach (var item in result)
+            //{
+            //    Console.WriteLine(item);
+            //}
+            #endregion
+
+            #region 4- Get the total of the numbers in an array.
+
+            //int[] numbers= { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            //var result = numbers.Sum();
+            //Console.WriteLine(result);
+            #endregion
+
+            #region Get the total number of characters of all words in dictionary_english.txt 
+            //Read dictionary_english.txt into Array of String First
+
+            //var result = dictionary.Sum(word => word.Length);
+            //Console.WriteLine(result);
+
+            #endregion
+
+            #region Get the length of the shortest word in dictionary
+
+            //var result = dictionary.Min(word => word.Length);
+            //Console.WriteLine(result);
+
+            #endregion
+
+            #region Get the length of the longest word in dictionary_english.txt
+
+            // var result = dictionary.Max(word => word.Length);
+            //Console.WriteLine(result);
+
+            #endregion
+
+            #region Get the average length of the words in dictionary
+
+            //var result = dictionary.Average(word => word.Length);
+            //Console.WriteLine(result);
+
+            #endregion
+
+            #region Get the total units in stock for each product category.
+            //var result = ProductList.GroupBy(p=>p.Category)
+            //                        .Select(p => new { Category = p.Key, TotalUnitsInStock = p.Sum(p => p.UnitsInStock) });
+
+            //foreach (var item in result)
+            //{
+            //    Console.WriteLine(item);
+            //}
+            #endregion
+
+            #region Get the cheapest price among each category's products
+            //var result = ProductList.GroupBy(product => product.Category)
+            //                        .Select(product => new { Category = product.Key, ChepeastPrice = product.Min(product => product.UnitPrice) });
+            //foreach (var item in result)
+            //{
+            //    Console.WriteLine(item);
+            //}
+            #endregion
+
+            #region Get the products with the cheapest price in each category (Use Let)
+            //var result = from product in ProductList
+            //             group product by product.Category into pr
+            //             let cheapestPrice = pr.Where( P => P.UnitPrice == pr.Min(p => p.UnitPrice))
+            //             select cheapestPrice;
+            //foreach (var item in result)
+            //{
+            //    foreach (var  i in item)
+            //    {
+            //        Console.WriteLine($"ProductName = {i.ProductName}, Category = {i.Category}, UnttPrice { i.UnitPrice} ");
+            //    }
+            //}
+            #endregion
+
+            #region Get the most expensive price among each category's products
+            //var result = ProductList.GroupBy(product => product.Category)
+            //                        .Select(product => new { Category = product.Key, MostExpensive = product.Max(product => product.UnitPrice) });
+            //foreach (var item in result)
+            //{
+            //    Console.WriteLine(item);
+            //}
+            #endregion
+
+            #region Get the average price of each category's products.
+            //var result = ProductList.GroupBy(product => product.Category)
+            //                        .Select(product => new { Category = product.Key, Average = product.Average(product => product.UnitPrice) });
+            //foreach (var item in result)
             //{
             //    Console.WriteLine(item);
             //}
 
-            // TypeOf
-            //ArrayList list = ["Ahmed", 1, true, "Ali"];
-            //var StringList = list.OfType<string>();
-            //Console.WriteLine(string.Join(", ", StringList));
-            #endregion
-
-            #region Transformation (Projection) Operators - Select , SelectMany
-            #region Select
-            //var ProductNames = ProductList.Select(product => product.ProductName);
-
-            //var ProductsNames = from product in ProductList
-            //                    select product.ProductName;
-            //var products = ProductList.Where(product => product.UnitsInStock == 0)
-            //                                .Select((product, index) => $"{index + 1} : {product.ProductName}");
-            //                                
-            //var products = ProductList.Where(product => product.UnitsInStock != 0)
-            //                           .Select(product => new
-            //                           {
-            //                               Id = product.ProductID,
-            //                               Name = product.ProductName,
-            //                               OldPrice = product.UnitPrice,
-            //                               NewPrice = product.UnitPrice - (product.UnitPrice * 0.1m)
-            //                           });
-
-            //var products = from product in ProductList
-            //               where product.UnitPrice > 1
-            //               select new
-            //               {
-            //                   Id = product.ProductID,
-            //                   Name = product.ProductName,
-            //                   OldPrice = product.UnitPrice,
-            //                   NewPrice = product.UnitPrice - (product.UnitPrice * 0.1m)
-            //               };
-
-            //var products = from product in ProductList
-            //               select new { Id = product.ProductID, Name = product.ProductName };
-            //foreach (var Product in products)
-            //    Console.WriteLine(Product); 
-            #endregion
-
-            #region SelectMany
-            // var orders = CustomerList.SelectMany(customer => customer.Orders , (customer,order)=> new {customer,order} );
-            //var orders = from customer in CustomerList
-            //             from order in customer.Orders
-            //             select new { customer, order };
-            //foreach (var order in orders)
-            //    Console.WriteLine(order);
             #endregion
             #endregion
 
-            #region Ordering Operators
-            //var result = ProductList.OrderByDescending(product => product.ProductName)
-            //                        .OrderByDescending(product => product.UnitsInStock)
-            //                        .Select(product => new {Name = product.ProductName , UnitsAvailable=product.UnitsInStock})    ;
+            #region LINQ - Set Operators
+            #region Find the unique Category names from Product List
+            //var result = ProductList.Select(product => product.Category).Distinct();
+            //foreach (var item in result)
+            //{
+            //    Console.WriteLine(item);
+            //}
+            #endregion
 
-           //var result = from product in ProductList
-           //          orderby product.ProductName descending, product.UnitsInStock descending
-           //             select new { Name = product.ProductName, UnitsAvailable = product.UnitsInStock };
+            #region Produce a Sequence containing the unique first letter from both product and customer names.
+            //var result = ProductList.Select(product => product.ProductName[0])
+            //                        .Union(CustomerList.Select(customer => customer.CustomerName[0]));
+            //foreach (var item in result)
+            //{
+            //    Console.Write(item+" ");
+            //}
+            #endregion
 
-           // foreach (var Product in result)
-           //     Console.WriteLine(Product);
+            #region Create one sequence that contains the common first letter from both product and customer names
+            //var result = ProductList.Select(product => product.ProductName[0])
+            //            .Intersect(CustomerList.Select(customer => customer.CustomerName[0]));
+            //foreach (var item in result)
+            //{
+            //    Console.Write(item + " ");
+            //}
+            #endregion
+
+            #region Create one sequence that contains the first letters of product names that are not also first letters of customer names.
+            //var result = ProductList.Select(product => product.ProductName[0])
+            //            .Except(CustomerList.Select(customer => customer.CustomerName[0]));
+            //foreach (var item in result)
+            //{
+            //    Console.Write(item + " ");
+            //}
+
+            #endregion
+
+            #region Create one sequence that contains the last Three Characters in each name of all customers and products, including any duplicates
+            //var result = ProductList.Select(product => product.ProductName.TakeLast(3).ToArray());
+            //var result02 = CustomerList.Select(customer => customer.CustomerName.TakeLast(3).ToArray());
+            //var result03 = result02.Concat(result);
+
+            //foreach (var item in result03)
+            //{
+            //    Console.WriteLine(item);
+            //}
+            #endregion
+            #endregion
+
+            #region LINQ - Quantifiers
+            #region Determine if any of the words in dictionary_english.txt (Read dictionary_english.txt into Array of String First) contain the substring 'ei'.
+            //var result = dictionary.Any(word => word.Contains("ei"));
+            //Console.WriteLine(result);
+            #endregion
+
+            #region Return a grouped a list of products only for categories that have at least one product that is out of stock.
+            //var result = ProductList.GroupBy(product => product.Category)
+            //                        .Where(product => product.Any(p => p.UnitsInStock == 0));
+
+            //foreach ( var product in result )
+            //{
+            //    Console.WriteLine(product.Key);
+
+            //}
+            #endregion
+
+            #region Return a grouped a list of products only for categories that have all of their products in stock.
+            var result = ProductList.GroupBy(product => product.Category)
+                                    .Where(product => product.All(p => p.UnitsInStock > 0));
+
+            foreach (var product in result)
+            {
+                Console.WriteLine(product.Key);
+
+            }
+
+            #endregion
             #endregion
         }
+
+
     }
 }
+
